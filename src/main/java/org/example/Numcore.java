@@ -60,6 +60,10 @@ public class Numcore {
 
     /**
      * команды низкого приоритета
+     * значения поля:
+     * n - нет действия
+     * a - сложение
+     * s - вычитание
      */
     private static String low_priority_command = "n";
 
