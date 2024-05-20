@@ -23,12 +23,12 @@ public class Numcore {
     /**
      * компонент высокого приоритета
      */
-    private static float hpterm = 0F;
+    private static float high_priority_term = 0F;
 
     /**
      * компонент низкого приоритета
      */
-    private static float lpterm = 0F;
+    private static float low_priority_term = 0F;
 
     /**
      * дублирует answer где требуется промежуточный ответ типа float
@@ -95,9 +95,9 @@ public class Numcore {
     private static String calcNum(float term1, float term2, String current_command) {
         String ans;
         float result = 0.0F;
-        //chkpt нужен для проверки необходимости вывода дробной части в ответе
+        //checkFloatPoint нужен для проверки необходимости вывода дробной части в ответе
         // если она составляет нуль, то ее можно убрать
-        int chkpt;
+        int checkFloatPoint;
         if (current_command.equals("a")) {
             result = term1 + term2;
         } else if (current_command.equals("s")) {
@@ -109,8 +109,8 @@ public class Numcore {
         }
         temporare_value = result;
         ans = Float.toString(result);
-        chkpt = (int) ((result - (int) result) * 10000000);
-        if (chkpt == 0)
+        checkFloatPoint = (int) ((result - (int) result) * 10000000);
+        if (checkFloatPoint == 0)
             ans = ans.replace(".0", "");
         return ans;
     }
@@ -128,25 +128,25 @@ public class Numcore {
         {
             if (high_priority_command.equals("n") && low_priority_command.equals("n"))
             {
-                hpterm = Float.parseFloat(answer);
+                high_priority_term = Float.parseFloat(answer);
                 high_priority_command = command;
             }
             else if (high_priority_command.equals("n"))
             {
-                lpterm = hpterm;
-                hpterm = Float.parseFloat(answer);
+                low_priority_term = high_priority_term;
+                high_priority_term = Float.parseFloat(answer);
                 high_priority_command = command;
             }
             else if (low_priority_command.equals("n"))
             {
-                answer = Numcore.calcNum(hpterm, Float.parseFloat(answer), high_priority_command);
-                hpterm = temporare_value;
+                answer = Numcore.calcNum(high_priority_term, Float.parseFloat(answer), high_priority_command);
+                high_priority_term = temporare_value;
                 high_priority_command = command;
             }
             else
             {
-                answer = Numcore.calcNum(hpterm, Float.parseFloat(answer), high_priority_command);
-                hpterm = temporare_value;
+                answer = Numcore.calcNum(high_priority_term, Float.parseFloat(answer), high_priority_command);
+                high_priority_term = temporare_value;
                 high_priority_command = command;
             }
         }
@@ -154,29 +154,29 @@ public class Numcore {
         {
             if (high_priority_command.equals("n") && low_priority_command.equals("n"))
             {
-                hpterm = Float.parseFloat(answer);
+                high_priority_term = Float.parseFloat(answer);
                 low_priority_command = command;
             }
             else if (high_priority_command.equals("n"))
             {
-                answer = Numcore.calcNum(hpterm, Float.parseFloat(answer), low_priority_command);
-                hpterm = temporare_value;
+                answer = Numcore.calcNum(high_priority_term, Float.parseFloat(answer), low_priority_command);
+                high_priority_term = temporare_value;
                 low_priority_command = command;
             }
             else if (low_priority_command.equals("n"))
             {
-                answer = Numcore.calcNum(hpterm, Float.parseFloat(answer), high_priority_command);
-                hpterm = temporare_value;
+                answer = Numcore.calcNum(high_priority_term, Float.parseFloat(answer), high_priority_command);
+                high_priority_term = temporare_value;
                 low_priority_command = command;
                 high_priority_command = "n";
             }
             else
             {
-                Numcore.calcNum(hpterm, Float.parseFloat(answer), high_priority_command);
-                hpterm = temporare_value;
-                answer = Numcore.calcNum(lpterm, hpterm, low_priority_command);
-                hpterm = temporare_value;
-                lpterm = 0.0F;
+                Numcore.calcNum(high_priority_term, Float.parseFloat(answer), high_priority_command);
+                high_priority_term = temporare_value;
+                answer = Numcore.calcNum(low_priority_term, high_priority_term, low_priority_command);
+                high_priority_term = temporare_value;
+                low_priority_term = 0.0F;
                 high_priority_command = "n";
                 low_priority_command = command;
             }
@@ -189,20 +189,20 @@ public class Numcore {
             }
             else if (high_priority_command.equals("n"))
             {
-                answer = Numcore.calcNum(hpterm, Float.parseFloat(answer), low_priority_command);
+                answer = Numcore.calcNum(high_priority_term, Float.parseFloat(answer), low_priority_command);
             }
             else if (low_priority_command.equals("n"))
             {
-                answer = Numcore.calcNum(hpterm, Float.parseFloat(answer), high_priority_command);
+                answer = Numcore.calcNum(high_priority_term, Float.parseFloat(answer), high_priority_command);
             }
             else
             {
-                Numcore.calcNum(hpterm, Float.parseFloat(answer), high_priority_command);
-                hpterm = temporare_value;
-                answer = Numcore.calcNum(lpterm, hpterm, low_priority_command);
+                Numcore.calcNum(high_priority_term, Float.parseFloat(answer), high_priority_command);
+                high_priority_term = temporare_value;
+                answer = Numcore.calcNum(low_priority_term, high_priority_term, low_priority_command);
             }
-            hpterm = 0.0F;
-            lpterm = 0.0F;
+            high_priority_term = 0.0F;
+            low_priority_term = 0.0F;
             high_priority_command = "n";
             low_priority_command = "n";
         }
@@ -215,8 +215,8 @@ public class Numcore {
      */
     public static void cidereNum(){
         if (answer.equals(default_val)){
-            hpterm = 0.0F;
-            lpterm = 0.0F;
+            high_priority_term = 0.0F;
+            low_priority_term = 0.0F;
             high_priority_command = "n";
             low_priority_command = "n";
         } else
