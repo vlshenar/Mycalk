@@ -2,54 +2,51 @@ package org.example;
 /**
  * В соответствии с шаблоном MVC в текущем классе реализована модель
  * в отвлечении от контроллера и представления
- *
- *
- *
  */
 public class Numcore {
-    /**
+    /*
      * если значение в поле answer равно значению в этом поле, то происходит замещение
      * значения в поле answer
      * также, процесс обнуления калькулятора использует это значение
      */
     private static final String default_val = "0";
 
-    /**
+    /*
      * поле answer сочетает функции первого компонента вычисления и
      * приемника результата
      */
     private static String answer = "0";
 
-    /**
+    /*
      * компонент высокого приоритета
      */
     private static float high_priority_term = 0F;
 
-    /**
+    /*
      * компонент низкого приоритета
      */
     private static float low_priority_term = 0F;
 
-    /**
+    /*
      * дублирует answer где требуется промежуточный ответ типа float
      * позволяет избежать лишних преобразований
      */
     private static float temporare_value = 0F;
 
-    /**
+    /*
      * флаг нового компонента:
      * если true, то начать вводить новое число
      */
     private static boolean newterm = true;
 
-    /**
+    /*
      * получение ответа
      */
     public static String getAnswer() {
         return answer;
     }
 
-    /**
+    /*
      * команды высокого приоритета: такие команды всегда выполняются первыми относительно
      * команд низкого приоритета
      * значения поля: n - отсутствие действия
@@ -58,7 +55,7 @@ public class Numcore {
      */
     private static String high_priority_command = "n";
 
-    /**
+    /*
      * команды низкого приоритета
      * значения поля:
      * n - нет действия
@@ -67,7 +64,7 @@ public class Numcore {
      */
     private static String low_priority_command = "n";
 
-    /**
+    /*
      * Ввод числа для последующих вычислений
      */
     public static void insertTerm(String s) {
@@ -88,7 +85,7 @@ public class Numcore {
         }
     }
 
-    /**
+    /*
      * Метод для непосредственного вычисления
      * вызывается из метода operateNum
      */
@@ -116,7 +113,7 @@ public class Numcore {
     }
 
 
-    /**
+    /*
      * Вычиление
      * Происходит в 2 этапа:
      * сначала обозначается действие и выполняется инициация поля term
@@ -209,7 +206,7 @@ public class Numcore {
         newterm = true;
     }
 
-    /**
+    /*
      * cidereNum - обнуляет компоненту answer, если она не равна default_val
      * обнуляет все компоненты и переводит current_command в 1 если равна
      */
@@ -223,7 +220,7 @@ public class Numcore {
             answer = default_val;
     }
 
-    /**
+    /*
      * Возведение в квадрат, извлечение корня и изменение знака числа
      */
     public static void singletermcalcNum(String command){

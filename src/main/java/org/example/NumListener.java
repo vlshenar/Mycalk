@@ -7,33 +7,22 @@ import java.awt.event.ActionListener;
  * Вместе с кнопками - объектами класса JButton
  * объект этого класса реализует компонент Контроллер из
  * шаблона проектирования MVC
+ * слушает нажатие на кнопку с цифрой
  */
 
 public class NumListener implements ActionListener {
-    private RezultViewer worklink = null;
-    public NumListener(RezultViewer r){
-        worklink = r;
+    private RezultViewer workLink = null;
+
+    //конструктор
+    public NumListener(RezultViewer workLink){
+        this.workLink = workLink;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         String calcCommand = e.getActionCommand();
-        if (calcCommand.equals("+"))
-            Numcore.operateNum("a");
-        else if (calcCommand.equals("-"))
-            Numcore.operateNum("s");
-        else if (calcCommand.equals("*"))
-            Numcore.operateNum("m");
-        else if (calcCommand.equals("/"))
-            Numcore.operateNum("d");
-        else if (calcCommand.equals("="))
-            Numcore.operateNum(calcCommand);
-        else if (calcCommand.equals("c"))
-            Numcore.cidereNum();
-        else if (calcCommand.equals("sqr") || calcCommand.equals("sqrt") || calcCommand.equals("+/-"))
-            Numcore.singletermcalcNum(calcCommand);
-        else
-            Numcore.insertTerm(calcCommand);
 
-        worklink.setText(Numcore.getAnswer());
+        Numcore.insertTerm(calcCommand);
+
+        workLink.setText(Numcore.getAnswer());
     }
 }
