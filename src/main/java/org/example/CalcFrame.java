@@ -1,5 +1,9 @@
 package org.example;
 
+import org.example.calcmodel.Numcore;
+import org.example.listeners.NumListener;
+import org.example.listeners.OperateListener;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -26,11 +30,12 @@ public class CalcFrame extends JFrame {
          * слушатель также получает ссылку на объект экрана вывода
          * при своем создании
          */
+        Numcore numcore = new Numcore();
         buttonPanel = new JPanel();
         viewPanel = new JPanel();
         viewer = new RezultViewer("0");
-        listener = new NumListener(viewer);
-        operateListener = new OperateListener(viewer);
+        listener = new NumListener(viewer, numcore);
+        operateListener = new OperateListener(viewer, numcore);
 
         /*
          *создание кнопок и окна вывода ответа

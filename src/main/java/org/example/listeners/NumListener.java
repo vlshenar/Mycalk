@@ -1,4 +1,7 @@
-package org.example;
+package org.example.listeners;
+
+import org.example.RezultViewer;
+import org.example.calcmodel.Numcore;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,18 +14,20 @@ import java.awt.event.ActionListener;
  */
 
 public class NumListener implements ActionListener {
-    private RezultViewer workLink = null;
+    private RezultViewer workLink;
+    private Numcore numcore;
 
     //конструктор
-    public NumListener(RezultViewer workLink){
+    public NumListener(RezultViewer workLink, Numcore numcore){
         this.workLink = workLink;
+        this.numcore = numcore;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         String calcCommand = e.getActionCommand();
 
-        Numcore.insertTerm(calcCommand);
+        numcore.insertTerm(calcCommand);
 
-        workLink.setText(Numcore.getAnswer());
+        workLink.setText(numcore.getAnswer());
     }
 }

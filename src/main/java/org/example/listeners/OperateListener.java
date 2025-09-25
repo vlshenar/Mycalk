@@ -1,4 +1,7 @@
-package org.example;
+package org.example.listeners;
+
+import org.example.RezultViewer;
+import org.example.calcmodel.Numcore;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,30 +14,28 @@ import java.awt.event.ActionListener;
  */
 
 public class OperateListener implements ActionListener {
-    private RezultViewer workLink = null;
+    private RezultViewer workLink;
+    private Numcore numcore;
 
     //конструктор
-    public OperateListener(RezultViewer workLink) {
+    public OperateListener(RezultViewer workLink, Numcore numcore) {
         this.workLink = workLink;
+        this.numcore = numcore;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String calcCommand = e.getActionCommand();
-        if (calcCommand.equals("+"))
-            Numcore.operateNum("a");
-        else if (calcCommand.equals("-"))
-            Numcore.operateNum("s");
-        else if (calcCommand.equals("*"))
-            Numcore.operateNum("m");
-        else if (calcCommand.equals("/"))
-            Numcore.operateNum("d");
+        if (calcCommand.equals("+") || calcCommand.equals("-"))
+            numcore.lowPriorityOperate(calcCommand.charAt(0));
+        else if (calcCommand.equals("*") || calcCommand.equals("/"))
+            numcore.lowPriorityOperate(calcCommand.charAt(0));
         else if (calcCommand.equals("="))
-            Numcore.operateNum(calcCommand);
+            numcore.resultOperate();
         else if (calcCommand.equals("c"))
-            Numcore.cidereNum();
+            numcore.cidereNum();
         else if (calcCommand.equals("sqr") || calcCommand.equals("sqrt") || calcCommand.equals("+/-"))
-            Numcore.singletermcalcNum(calcCommand);
-        workLink.setText(Numcore.getAnswer());
+            numcore.singletermcalcNum(calcCommand);
+        workLink.setText(numcore.getAnswer());
     }
 }
