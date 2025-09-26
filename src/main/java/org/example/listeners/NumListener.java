@@ -14,8 +14,8 @@ import java.awt.event.ActionListener;
  */
 
 public class NumListener implements ActionListener {
-    private RezultViewer workLink;
-    private Numcore numcore;
+    private final RezultViewer workLink;
+    private final Numcore numcore;
 
     //конструктор
     public NumListener(RezultViewer workLink, Numcore numcore){

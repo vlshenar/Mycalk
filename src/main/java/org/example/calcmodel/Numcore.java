@@ -16,49 +16,34 @@ public class Numcore {
     // приемника результата
     private String answer = "0";
 
-    // компонент высокого приоритета
-    private float highPriorityTerm = 0F;
-
     // компонент низкого приоритета
-    private float lowPriorityTerm = 0F;
-
+    private float secondTerm = 0F;
 
     // первый компонент
     private float firstTerm = 0F;
 
     // флаг нового компонента:
     // если true, то начать вводить новое число
-    private static boolean newterm = true;
+    private static boolean newTerm = true;
+
+    //текущее арифметическое действие, ожидающее исполнения
+    private char currentCommand = 'n';
+
 
     //массив объектов-операторов
     private MathOperator[] operators;
 
     //конструктор
     public Numcore() {
-        operators = new MathOperator[4];
+        operators = new MathOperator[5];
         operators[0] = new Add('+');
         operators[1] = new Substruct('-');
         operators[2] = new Multiply('*');
         operators[3] = new Divide('/');
+        operators[4] = new NoneAction('n');
     }
 
-    /*
-     * команды высокого приоритета: такие команды всегда выполняются первыми относительно
-     * команд низкого приоритета
-     * значения поля: n - отсутствие действия
-     * * - умножение
-     * / - деление
-     */
-    private char highPriorityCommand = 'n';
 
-    /*
-     * команды низкого приоритета
-     * значения поля:
-     * n - нет действия
-     * + - сложение
-     * - - вычитание
-     */
-    private char lowPriorityCommand = 'n';
 
     // получение ответа
     public String getAnswer() {
@@ -68,12 +53,12 @@ public class Numcore {
 
     // Ввод числа для последующих вычислений
     public void insertTerm(String s) {
-        if (newterm) {
+        if (newTerm) {
             answer = default_val;   //на случай, если ввод начинается с точки
             if (s.equals("."))
                 answer += s;
             else answer = s;
-            newterm = false;
+            newTerm = false;
         } else {
             if (answer.equals(default_val) && !s.equals("."))
                 answer = s;
@@ -104,45 +89,22 @@ public class Numcore {
     }
 
 
-    //умножение, деление, промежуточные ответы
-    public void highPriorityOperate(char action) {
-        if (highPriorityCommand != 'n') {
-            calculate(highPriorityCommand);
-            toAnswer(lowPriorityTerm);
-            highPriorityCommand = action;
-            highPriorityTerm = Float.parseFloat(answer);
-        } else {
-            lowPriorityTerm = Float.parseFloat(answer);
-            highPriorityCommand = action;
+    //занесение первого операнда и установление знака
+    public void Operate(char action) {
+        if(currentCommand == 'n') {
+            firstTerm = Float.parseFloat(answer);
+            currentCommand = action;
+            newTerm = true;
         }
-        newterm = true;
-    }
-
-    //сложение, вычитание, промежуточные ответы
-    public void lowPriorityOperate(char action) {
-        if(highPriorityCommand != 'n') calculate(highPriorityCommand);
-        if(lowPriorityCommand != 'n') calculate(lowPriorityCommand);
-        lowPriorityCommand = action;
-        highPriorityCommand = 'n';
-        firstTerm = Float.parseFloat(answer);
-        toAnswer(firstTerm);
-        newterm = true;
     }
 
     //окончательный ответ, завершение процесса вычисления
     public void resultOperate() {
-        float tmpValue = Float.parseFloat(answer);
-        if(highPriorityCommand != 'n') {
-            highPriorityTerm = tmpValue;
-            calculate(highPriorityCommand);
-        }
-        else lowPriorityTerm = tmpValue;
-
-        if(lowPriorityCommand != 'n') calculate(lowPriorityCommand);
-        toAnswer(firstTerm);
-        highPriorityCommand = lowPriorityCommand = 'n';
-        firstTerm = lowPriorityTerm = highPriorityTerm = 0.0F;
-        newterm = true;
+       secondTerm = Float.parseFloat(answer);
+       calculate(currentCommand);
+       toAnswer(firstTerm);
+       currentCommand = 'n';
+       newTerm = true;
     }
 
 
@@ -152,10 +114,9 @@ public class Numcore {
      */
     public void cidereNum() {
         if (answer.equals(default_val)) {
-            highPriorityTerm = 0.0F;
-            lowPriorityTerm = 0.0F;
-            highPriorityCommand = 'n';
-            lowPriorityCommand = 'n';
+            secondTerm = 0.0F;
+            firstTerm = 0.0F;
+            currentCommand = 'n';
         } else
             answer = default_val;
     }
@@ -188,7 +149,7 @@ public class Numcore {
 
         @Override
         public void operate() {
-            firstTerm += lowPriorityTerm;
+            firstTerm += secondTerm;
         }
     }
 
@@ -201,7 +162,7 @@ public class Numcore {
 
         @Override
         public void operate() {
-            firstTerm -= lowPriorityTerm;
+            firstTerm -= secondTerm;
         }
     }
 
@@ -214,7 +175,8 @@ public class Numcore {
 
         @Override
         public void operate() {
-            firstTerm *= lowPriorityTerm;
+            firstTerm *= secondTerm;
+
         }
     }
 
@@ -227,8 +189,20 @@ public class Numcore {
 
         @Override
         public void operate() {
-            firstTerm /= lowPriorityTerm;
+            firstTerm /= secondTerm;
         }
     }
 
+    //оператор бездействия
+    private class NoneAction extends MathOperator {
+
+        protected NoneAction(char mathAction) {
+            super(mathAction);
+        }
+
+        @Override
+        public void operate() {
+            //none action
+        }
+    }
 }

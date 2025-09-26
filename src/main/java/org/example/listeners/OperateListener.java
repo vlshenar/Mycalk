@@ -14,8 +14,8 @@ import java.awt.event.ActionListener;
  */
 
 public class OperateListener implements ActionListener {
-    private RezultViewer workLink;
-    private Numcore numcore;
+    private final RezultViewer workLink;
+    private final Numcore numcore;
 
     //конструктор
     public OperateListener(RezultViewer workLink, Numcore numcore) {
@@ -26,16 +26,13 @@ public class OperateListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String calcCommand = e.getActionCommand();
-        if (calcCommand.equals("+") || calcCommand.equals("-"))
-            numcore.lowPriorityOperate(calcCommand.charAt(0));
-        else if (calcCommand.equals("*") || calcCommand.equals("/"))
-            numcore.lowPriorityOperate(calcCommand.charAt(0));
-        else if (calcCommand.equals("="))
+        if (calcCommand.equals("="))
             numcore.resultOperate();
         else if (calcCommand.equals("c"))
             numcore.cidereNum();
         else if (calcCommand.equals("sqr") || calcCommand.equals("sqrt") || calcCommand.equals("+/-"))
             numcore.singletermcalcNum(calcCommand);
+        else numcore.Operate(calcCommand.charAt(0));
         workLink.setText(numcore.getAnswer());
     }
 }
