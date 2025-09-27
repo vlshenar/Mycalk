@@ -5,6 +5,7 @@ package org.example.calcmodel;
  * в отвлечении от контроллера и представления
  */
 public class Numcore {
+
     /*
      * если значение в поле answer равно значению в этом поле, то происходит замещение
      * значения в поле answer
@@ -16,11 +17,11 @@ public class Numcore {
     // приемника результата
     private String answer = "0";
 
-    // компонент низкого приоритета
-    private float secondTerm = 0F;
-
-    // первый компонент
+    // первый операнд
     private float firstTerm = 0F;
+
+    // второй операнд
+    private float secondTerm = 0F;
 
     // флаг нового компонента:
     // если true, то начать вводить новое число
@@ -29,12 +30,15 @@ public class Numcore {
     //текущее арифметическое действие, ожидающее исполнения
     private char currentCommand = 'n';
 
+    //поле микростека для выбора порядка действий
+    private LowPriorityStack stack;
 
     //массив объектов-операторов
     private MathOperator[] operators;
 
     //конструктор
     public Numcore() {
+        stack = new LowPriorityStack();
         operators = new MathOperator[5];
         operators[0] = new Add('+');
         operators[1] = new Substruct('-');
@@ -43,13 +47,10 @@ public class Numcore {
         operators[4] = new NoneAction('n');
     }
 
-
-
     // получение ответа
     public String getAnswer() {
         return answer;
     }
-
 
     // Ввод числа для последующих вычислений
     public void insertTerm(String s) {
@@ -69,6 +70,7 @@ public class Numcore {
         }
     }
 
+    //выполнение указанного арифметического действия
     private void calculate(char action) {
         int i = 0;
         while (action != operators[i].mathAction) i++;
@@ -88,30 +90,50 @@ public class Numcore {
         answer = ans;
     }
 
+    //выполняет действия высокого приоритета: умножение и деление
+    public void highPriorityOperate(char action) {
+        stack.push();
+        if (currentCommand == '*' || currentCommand == '/') {
+            secondTerm = Float.parseFloat(answer);
+            calculate(currentCommand);
+        } else firstTerm = Float.parseFloat(answer);
+        currentCommand = action;
+        toAnswer(firstTerm);
+        newTerm = true;
+    }
 
-    //занесение первого операнда и установление знака
-    public void Operate(char action) {
-        if(currentCommand == 'n') {
+    //выполняет действия низкого приоритета: сложение и вычитание
+    public void lowPriorityOperate(char action) {
+        if (currentCommand == 'n') {
             firstTerm = Float.parseFloat(answer);
-            currentCommand = action;
-            newTerm = true;
+        } else {
+            secondTerm = Float.parseFloat(answer);
+            calculate(currentCommand);
+            if (stack.pushed) {
+                stack.pop();
+                calculate(currentCommand);
+            }
         }
+        toAnswer(firstTerm);
+        currentCommand = action;
+        newTerm = true;
     }
 
     //окончательный ответ, завершение процесса вычисления
     public void resultOperate() {
-       secondTerm = Float.parseFloat(answer);
-       calculate(currentCommand);
-       toAnswer(firstTerm);
-       currentCommand = 'n';
-       newTerm = true;
+        secondTerm = Float.parseFloat(answer);
+        calculate(currentCommand);
+        if (stack.pushed) {
+            stack.pop();
+            calculate(currentCommand);
+        }
+        toAnswer(firstTerm);
+        currentCommand = 'n';
+        newTerm = true;
     }
 
-
-    /*
-     * cidereNum - обнуляет компоненту answer, если она не равна default_val
-     * обнуляет все компоненты и переводит current_command в 1 если равна
-     */
+    // cidereNum - обнуляет компоненту answer, если она не равна default_val
+    // обнуляет все компоненты и переводит current_command в 1 если равна
     public void cidereNum() {
         if (answer.equals(default_val)) {
             secondTerm = 0.0F;
@@ -204,5 +226,32 @@ public class Numcore {
         public void operate() {
             //none action
         }
+    }
+
+    //микростек принимает операнд и действие низкого приоритета
+    private class LowPriorityStack {
+
+        private float term;
+        private char action;
+        private boolean pushed = false;
+
+        void push() {
+            if ((currentCommand == '+' || currentCommand == '-') && !pushed) {
+                term = firstTerm;
+                firstTerm = secondTerm;
+                action = currentCommand;
+                pushed = true;
+            }
+        }
+
+        void pop() {
+            if (pushed) {
+                secondTerm = firstTerm;
+                firstTerm = term;
+                currentCommand = action;
+                pushed = false;
+            }
+        }
+
     }
 }

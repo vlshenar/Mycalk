@@ -26,13 +26,17 @@ public class OperateListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String calcCommand = e.getActionCommand();
-        if (calcCommand.equals("="))
+        if (calcCommand.equals("*") || calcCommand.equals("/"))
+            numcore.highPriorityOperate(calcCommand.charAt(0));
+        else if (calcCommand.equals("+") || calcCommand.equals("-"))
+            numcore.lowPriorityOperate(calcCommand.charAt(0));
+        else if (calcCommand.equals("="))
             numcore.resultOperate();
         else if (calcCommand.equals("c"))
             numcore.cidereNum();
         else if (calcCommand.equals("sqr") || calcCommand.equals("sqrt") || calcCommand.equals("+/-"))
             numcore.singletermcalcNum(calcCommand);
-        else numcore.Operate(calcCommand.charAt(0));
+
         workLink.setText(numcore.getAnswer());
     }
 }
