@@ -1,6 +1,6 @@
 package org.example.calcmodel;
 
-public abstract class MathOperator {
+abstract class MathOperator {
     //символ арифметической операции
     public final char mathAction;
 

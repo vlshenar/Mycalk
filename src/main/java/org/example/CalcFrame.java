@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.calcmodel.Numcore;
+import org.example.calcview.ResultViewer;
 import org.example.listeners.NumListener;
 import org.example.listeners.OperateListener;
 
@@ -19,9 +20,10 @@ public class CalcFrame extends JFrame {
     private JPanel viewPanel;
     private NumListener listener;
     private OperateListener operateListener;
-    private RezultViewer viewer;
-    private final int CALC_WIDTH = 400;
-    private final int CALC_HEIGHT = 300;
+    private ResultViewer viewer;
+    private final int CALC_WIDTH = 600;
+    private final int CALC_HEIGHT = 500;
+    private Font buttonFont;
 
     public CalcFrame(){
         /*
@@ -33,9 +35,10 @@ public class CalcFrame extends JFrame {
         Numcore numcore = new Numcore();
         buttonPanel = new JPanel();
         viewPanel = new JPanel();
-        viewer = new RezultViewer("0");
+        viewer = new ResultViewer("0");
         listener = new NumListener(viewer, numcore);
         operateListener = new OperateListener(viewer, numcore);
+        buttonFont = new Font("Serif", Font.BOLD, 22);
 
         /*
          *создание кнопок и окна вывода ответа
@@ -76,9 +79,10 @@ public class CalcFrame extends JFrame {
     }
 
 
-     // вводит кнопки, регистрирует слушателя и добавляет их в панель buttonpanel
+     // вводит кнопки, регистрирует слушателя и добавляет их в панель buttonPanel
     private void addButton(String label, ActionListener listener){
         JButton button = new JButton(label);
+        button.setFont(buttonFont);
         button.addActionListener(listener);
         buttonPanel.add(button);
     }
